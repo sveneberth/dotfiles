@@ -1,0 +1,42 @@
+#########
+# ALIAS #
+#########
+
+# general
+alias c="clear"
+
+# list dir
+alias ll="ls -alhF"
+alias la="ls -lA"
+alias l="ls -CF"
+
+# navigation
+alias ..="cd .."
+alias ...="cd ../../../"
+alias ....="cd ../../../../"
+alias .....="cd ../../../../"
+alias .4="cd ../../../../"
+alias .5="cd ../../../../.."
+
+#alias -="cd -"
+
+# browser
+alias ff="/bin/firefox"
+alias chrome="/bin/google-chrome-stable"
+alias browser=chrome
+
+# git
+alias gitsub="git submodule init && git submodule update --recursive"
+
+# edit dotfiles
+alias eB='$EDITOR ~/.bashrc'
+alias eP='$EDITOR ~/.profile'
+alias rB='source ~/.bashrc'
+
+
+alias serve="python -m http.server 11111"
+
+# python / pip / pipenv
+alias ps="pipenv shell"
+alias pr="pipenv run"
+alias pi="pipenv install -d"
