@@ -1,3 +1,5 @@
+export EDITOR=vim
+
 # git
 #alias gitsub="git submodule init && git submodule update --recursive"
 function gac() {
