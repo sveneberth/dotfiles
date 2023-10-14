@@ -38,7 +38,7 @@ alias rB='source ~/.bashrc'
 alias serve="python -m http.server 11111"
 
 # python / pip / pipenv
-alias ps="pipenv shell"
+alias psh="pipenv shell"
 alias pr="pipenv run"
 alias pi="pipenv install -d"
 alias pri="pipenv --rm && pipenv install -d"
