@@ -6,6 +6,8 @@
 	rebase = true
 [init]
 	defaultBranch = main
+[remotes]
+	my = upstream se
 [alias]
     # One letter alias for our most frequent commands.
     a = add
