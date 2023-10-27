@@ -28,6 +28,9 @@ alias browser=chrome
 # git
 alias gitsub="git submodule init && git submodule update --recursive"
 
+# tmp helper
+alias tmpDir='cd $(mktemp -d)'
+
 # edit dotfiles
 alias eB='$EDITOR ~/.bashrc'
 alias eP='$EDITOR ~/.profile'
