@@ -14,3 +14,10 @@ function randomStr() {
 #    cat /dev/urandom | tr -cd ${2:-'a-zA-Z0-9'} | fold -w ${1:-8} | head -n 1
     tr -cd ${2:-'a-zA-Z0-9'} < /dev/urandom | head -c ${1:-8}
 }
+
+
+function releaseTag() {
+    tag_name="release-`date +"%Y-%m-%d"`${1}"
+    git tag -asm "Release: ${2}" "$tag_name"
+    git push "$(git remote)" "$tag_name"
+}
