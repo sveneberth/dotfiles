@@ -137,6 +137,9 @@
     # submodule update with initialize and recursive; this is useful to bring a submodule fully up to date.
     smuir = submodule update --init --recursive
 
+    # submodule fetch from all remotes
+    sfa = submodule foreach git fetch --all
+
     # tag always signed
     tag = tag -s
 
