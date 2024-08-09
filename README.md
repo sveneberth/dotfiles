@@ -16,10 +16,6 @@ fi
 
 ### Load git
 ```sh
-# TODO: not working (not applied)?!
-[includeIf "gitdir:~/dotfiles/"]
-    path = ~/dotfiles/gitconfig
-
 [include]
     path = ~/dotfiles/gitconfig
 ```
