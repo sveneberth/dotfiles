@@ -46,3 +46,7 @@ alias pr="pipenv run"
 alias pi="pipenv install -d"
 alias pri="pipenv --rm && pipenv install -d"
 alias pu="pipenv update"
+
+
+# ViUR development
+alias kill_server="pkill app_server -ef -9 ; pkill gunicorn -ef -9 ; pkill gcloud-tasks-emulator -ef -9"
