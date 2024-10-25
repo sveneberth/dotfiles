@@ -18,6 +18,6 @@ function randomStr() {
 
 function releaseTag() {
     tag_name="release-`date +"%Y-%m-%d"`${1}"
-    git tag -asm "Release: ${2}" "$tag_name"
+    git tag -am "Release: ${2}" "$tag_name"
     git push "$(git remote)" "$tag_name"
 }
