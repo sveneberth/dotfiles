@@ -110,6 +110,9 @@
     ref = rev-parse --short HEAD
     hash = ref
 
+    # Hash of the empty repo (before the initial commit)
+    emptyhash = hash-object -t tree /dev/null
+
 
     ### pull ###
 
