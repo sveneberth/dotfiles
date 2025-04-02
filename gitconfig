@@ -61,6 +61,12 @@
     dd = diff --check --dirstat --find-copies --find-renames --histogram --color
 
 
+    ### add ###
+    
+    # add in patch mode
+    ap = add -p
+
+
     ### commit ###
 
     # commit - amend the tip of the current branch rather than creating a new commit.
@@ -80,6 +86,9 @@
 
     # commit and stage changed files
     cc = commit -a
+
+    # commit in patch mode
+    cp = commit -p
 
 
     ### log ###
