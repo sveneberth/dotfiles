@@ -132,6 +132,9 @@
     pps = pull -p --autostash
 
 
+    ### push ###
+    pt = "!f() { git push && git push --tags; }; f"
+
     ### submodule ###
 
     # submodule - enables foreign repositories to be embedded within a dedicated subdirectory of the source tree.
