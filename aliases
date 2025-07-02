@@ -45,7 +45,7 @@ alias psh="pipenv shell"
 alias pr="pipenv run"
 alias pi="pipenv install -d"
 alias pri="pipenv --rm && pipenv install -d"
-alias pu="pipenv update"
+alias pu="pipenv update -d"
 
 
 # ViUR development

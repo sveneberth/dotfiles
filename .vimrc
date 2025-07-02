@@ -11,3 +11,4 @@ set expandtab       " Expand TABs to spaces
 
 set number          " Line Numbers
 
+syntax on
