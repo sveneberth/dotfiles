@@ -113,7 +113,7 @@
 
     # Changelog style
     changelog = "!f() { git --no-pager log --reverse --pretty=format:\"%s (%an) [%h]\" \"$@\" && echo; }; f"
-
+    changelogbullets = "!f() { git --no-pager log --reverse --pretty=format:\"* %s (%an) [%h]\" \"$@\" && echo; }; f"
 
     # get the short commit hash
     ref = rev-parse --short HEAD
