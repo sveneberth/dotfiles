@@ -14,6 +14,21 @@ if [ -f "$HOME/dotfiles/aliases" ]; then
 fi
 ```
 
+### Emoji picker (rofimoji)
+```sh
+# Install
+yay -S rofi rofimoji
+
+# Symlink rofi config
+mkdir -p ~/.config/rofi
+ln -s ~/dotfiles/rofi-config.rasi ~/.config/rofi/config.rasi
+
+# Add shortcut in XFCE: Settings > Keyboard > Application Shortcuts
+# - Command: rofimoji
+# - Shortcut: [Ctrl]+.
+xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/<Primary>period" -n -t string -s "rofimoji"
+```
+
 ### Load git
 ```sh
 [include]

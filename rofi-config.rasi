@@ -1,0 +1,11 @@
+configuration {
+    kb-custom-1: "Alt+1,Alt+KP_1";
+    kb-custom-2: "Alt+2,Alt+KP_2";
+    kb-custom-3: "Alt+3,Alt+KP_3";
+    kb-custom-4: "Alt+4,Alt+KP_4";
+    kb-custom-5: "Alt+5,Alt+KP_5";
+    kb-custom-6: "Alt+6,Alt+KP_6";
+    kb-custom-7: "Alt+7,Alt+KP_7";
+    kb-custom-8: "Alt+8,Alt+KP_8";
+    kb-custom-9: "Alt+9,Alt+KP_9";
+}
