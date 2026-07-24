@@ -49,4 +49,4 @@ alias pu="pipenv update -d"
 
 
 # ViUR development
-alias kill_server="pkill app_server -ef -9 ; pkill gunicorn -ef -9 ; pkill gcloud-tasks-emulator -ef -9"
+alias kill_server="pkill app_server -ef -9 ; pkill gunicorn -ef -9 ; pkill gcloud-tasks-emulator -ef -9; pkill -9 -f \"viur run\""
