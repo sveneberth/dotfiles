@@ -21,3 +21,17 @@ function releaseTag() {
     git tag -am "Release: ${2}" "$tag_name"
     git push "$(git remote)" "$tag_name"
 }
+
+
+# load a .env file (KEY=value) into the current shell and export all vars
+function load_env() {
+    local file="${1:-.env}"
+    if [[ ! -f "$file" ]]; then
+        echo "load_env: file not found: $file" >&2
+        return 1
+    fi
+    set -a
+    source "$file"
+    set +a
+    echo "load_env: loaded '$file'"
+}
