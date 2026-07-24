@@ -1,5 +1,25 @@
 export EDITOR=vim
 
+function ctx_bash() {
+    local topic="${1:-}"
+    if [[ -z "$topic" ]]; then
+        echo "Usage: ctx_bash <topic>"
+        local found=0
+        for f in "$HOME"/.bash_history_ctx_*; do
+            [[ -f "$f" ]] || continue
+            (( found++ == 0 )) && echo "Available contexts:"
+            echo "  ${f##*_ctx_}"
+        done
+        return 1
+    fi
+    local histfile="$HOME/.bash_history_ctx_$topic"
+    echo "Entering bash context: $topic  ($histfile)"
+    HISTFILE="$histfile" BASH_CTX="$topic" bash --rcfile <(printf '%s\n' \
+        "source $HOME/.bashrc" \
+        'PS1="\[\033[01;33m\](ctx:$BASH_CTX) \[\033[00m\]$PS1"' \
+    )
+}
+
 # git
 #alias gitsub="git submodule init && git submodule update --recursive"
 function gac() {
