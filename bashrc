@@ -101,14 +101,16 @@ function bak() {
 #   -n NAME  log name (default: derived)   -d  daily stamp (%Y-%m-%d)
 #   -t FMT   date(1) format                -N  no timestamp at all
 #   -D DIR   log directory                 -x  truncate instead of append
+#                                          -c  run in a pty, so the command keeps
+#                                              its colors and terminal width
 # As a pipe it consumes stdin instead of running anything - then the log name has to
 # come from -n (default: log):
 #   pr ./cleanup_task.py --fix |& lwt -n cleanup_task
 # Defaults can also come from LWT_LOG_DIR and LWT_TIMESTAMP; options win.
 # Returns the exit code of the command, not the one of tee.
 lwt() {
-    local usage="Usage: lwt [-n NAME] [-t FMT|-d|-N] [-D DIR] [-x] [:] <command> [args...]"
-    local name="" stamp_fmt="${LWT_TIMESTAMP-%Y-%m-%d-%H-%M}" dir="${LWT_LOG_DIR-}" append=1
+    local usage="Usage: lwt [-n NAME] [-t FMT|-d|-N] [-D DIR] [-x] [-c] [:] <command> [args...]"
+    local name="" stamp_fmt="${LWT_TIMESTAMP-%Y-%m-%d-%H-%M}" dir="${LWT_LOG_DIR-}" append=1 pty=0
 
     while (( $# )); do
         case "$1" in
@@ -126,6 +128,7 @@ lwt() {
             -d) stamp_fmt="%Y-%m-%d"; shift ;;
             -N) stamp_fmt=""; shift ;;
             -x) append=0; shift ;;
+            -c) pty=1; shift ;;
             -h|--help) echo "$usage" >&2; return 0 ;;
             :|--) shift; break ;;
             *) break ;;
@@ -201,6 +204,26 @@ lwt() {
     fi
 
     printf '=== lwt: %s | %s ===\n' "$*" "$(date +'%Y-%m-%d %H:%M:%S')" >> "$log"
+
+    # without a controlling terminal a pty buys nothing, so fall through to the
+    # plain run instead of failing on /dev/tty
+    if (( pty )) && { : > /dev/tty; } 2>/dev/null; then
+        # a pseudo terminal makes the command think it talks to a terminal, so it
+        # keeps colors and the real width; the log gets that stream with CRs and
+        # ANSI escapes removed. Colored output goes to the terminal, not to stdout.
+        local quoted rows cols
+        printf -v quoted '%q ' "$@"
+        # script(1) reads the window size from its stdout, which is the pipe below,
+        # so pass the real terminal size into the pty explicitly
+        if read -r rows cols < <(stty size < /dev/tty 2>/dev/null); then
+            quoted="stty rows ${rows} cols ${cols} 2>/dev/null; ${quoted}"
+        fi
+        script -qec "$quoted" /dev/null \
+            | tee /dev/tty \
+            | sed -u 's/\r$//; s/\x00//g; s/\x1b\[[0-9;?]*[a-zA-Z]//g' >> "$log"
+        return "${PIPESTATUS[0]}"
+    fi
+
     "$@" |& tee -a -- "$log"
     return "${PIPESTATUS[0]}"
 }
