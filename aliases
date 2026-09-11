@@ -44,7 +44,7 @@ alias serve="python -m http.server 11111"
 alias psh="pipenv shell"
 alias pr="pipenv run"
 alias pi="pipenv install -d"
-alias pri="pipenv --rm && pipenv install -d"
+alias pri="pipenv remove && pipenv install -d"
 alias pu="pipenv update -d"
 
 
