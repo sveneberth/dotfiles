@@ -29,6 +29,14 @@ ln -s ~/dotfiles/rofi-config.rasi ~/.config/rofi/config.rasi
 xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/<Primary>period" -n -t string -s "rofimoji"
 ```
 
+### Terminal reset (`fix-term`)
+Repairs a terminal whose colour, underline or charset attribute got stuck.
+
+```sh
+ln -s ~/dotfiles/fix-term ~/.local/bin/fix-term
+fix-term --help
+```
+
 ### Load git
 ```sh
 [include]

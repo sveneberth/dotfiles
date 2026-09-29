@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+# Repair a terminal whose rendering state got stuck -- a colour, underline or
+# charset attribute that never got terminated, a shrunk scrolling region, a
+# hidden cursor.
+#
+# The point of this script is *where* it writes: a process started by Claude
+# Code's Bash tool has no controlling terminal of its own ("tty" prints "kein
+# Terminal"), so a plain `reset` or `printf '\033[0m'` goes into the captured
+# tool output and never reaches the visible terminal. This walks the process
+# tree upwards, finds the first real pts, and writes the escape sequences
+# straight to that device.
+#
+# Nothing here clears the screen or the scrollback unless --clear-scrollback is
+# given. Lines that were already drawn with the stuck attribute keep it; only
+# output from here on is rendered correctly again.
+#
+# Usage:
+#   fix-term                   # soft reset of the auto-detected terminal
+#   fix-term --tty /dev/pts/3  # reset a specific terminal
+#   fix-term --hard            # additionally send DECSTR (ESC[!p)
+#   fix-term --clear-scrollback
+#   fix-term --list            # only show which terminal would be used
+#
+# Version: 1.0.1
+
+set -euo pipefail
+
+VERSION="1.0.1"
+target=""
+hard=0
+clear_scrollback=0
+list_only=0
+
+die() { printf 'fix-term: %s\n' "$1" >&2; exit 1; }
+
+# Print the leading comment block as the help text, so it cannot drift apart
+# from the actual documentation the way fixed line numbers did.
+usage() {
+    awk 'NR == 1 { next } /^#/ { sub(/^# ?/, ""); print; next } { exit }' "$0"
+    exit 0
+}
+
+# Walk the process tree upwards and return the first controlling terminal found.
+detect_tty() {
+    local pid=$PPID tty ppid
+    for _ in $(seq 1 12); do
+        [ -z "$pid" ] || [ "$pid" = "0" ] || [ "$pid" = "1" ] && [ "$pid" != "$PPID" ] && break
+        read -r tty ppid <<<"$(ps -o tty=,ppid= -p "$pid" 2>/dev/null || true)"
+        [ -z "${tty:-}" ] && break
+        if [ "$tty" != "?" ]; then
+            printf '/dev/%s\n' "$tty"
+            return 0
+        fi
+        pid=${ppid:-}
+    done
+    return 1
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --tty) target="${2:-}"; [ -n "$target" ] || die "--tty needs a device"; shift 2 ;;
+        --hard) hard=1; shift ;;
+        --clear-scrollback) clear_scrollback=1; shift ;;
+        --list) list_only=1; shift ;;
+        --version) printf 'fix-term %s\n' "$VERSION"; exit 0 ;;
+        -h|--help) usage ;;
+        *) die "unknown argument: $1 (try --help)" ;;
+    esac
+done
+
+if [ -z "$target" ]; then
+    target="$(detect_tty || true)"
+    [ -n "$target" ] || die "no terminal found in the process tree -- pass --tty /dev/pts/N"
+fi
+
+[ -c "$target" ] || die "$target is not a character device"
+[ -w "$target" ] || die "$target is not writable"
+
+if [ "$list_only" = "1" ]; then
+    printf '%s\n' "$target"
+    exit 0
+fi
+
+{
+    printf '\033[0m'      # SGR reset: colour, bold, underline, reverse
+    printf '\033(B'       # G0 back to ASCII, undoes stuck line-drawing charset
+    printf '\033[?25h'    # show the cursor
+    printf '\033[?7h'     # re-enable autowrap
+    printf '\033[?5l'     # leave reverse video
+    printf '\033[4l'      # replace instead of insert mode
+    printf '\033[r'       # scrolling region back to the full screen
+    [ "$hard" = "1" ] && printf '\033[!p'              # DECSTR soft terminal reset
+    [ "$clear_scrollback" = "1" ] && printf '\033[3J'  # drop the scrollback
+    true
+} > "$target"
+
+printf 'fix-term: reset sent to %s%s%s\n' \
+    "$target" \
+    "$([ "$hard" = "1" ] && printf ' (hard)')" \
+    "$([ "$clear_scrollback" = "1" ] && printf ' (scrollback cleared)')"
