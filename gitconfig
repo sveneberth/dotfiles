@@ -45,6 +45,9 @@
     # branch and only list branches whose tips are not reachable from the specified commit (HEAD if not specified).
     bnm = branch --no-merged
 
+    # branch - list branches, most recently committed first: "date - branch [author]". Add `-a` to include remote branches (red).
+    bs = branch --sort=-committerdate --format='%(color:green)%(committerdate:short)%(color:reset) - %(if:equals=refs/remotes)%(refname:rstrip=-2)%(then)%(color:red)%(else)%(color:yellow)%(end)%(refname:short)%(color:reset) %(color:blue)[%(authorname)]%(color:reset)'
+
 
     ### diff ###
 
