@@ -9,26 +9,23 @@
 | `aliases` | Aliases | `bashrc` |
 | `bin/` | Scripts | `PATH` from `profile` |
 | `gitconfig` | Git settings | `[include]` in `~/.gitconfig` |
-| `.vimrc` | vim | symlink `~/.vimrc` |
-| `.ipython/startup/` | IPython startup imports | symlink via `setup_ipython.sh` |
-| `rofi-config.rasi` | rofi | symlink, see [Emoji picker](#emoji-picker-rofimoji) |
-
-New scripts and changes arrive with a `git pull`; the setup below is needed once per machine.
+| `.vimrc` | vim | symlink `~/.vimrc` (and `/root/.vimrc` with `--root`) |
+| `.ipython/startup/` | IPython startup imports | symlink `~/.ipython/profile_default/startup`, if IPython is installed |
+| `rofi-config.rasi` | rofi | symlink `~/.config/rofi/config.rasi`, if rofi is installed |
 
 ## Setup
 
 ```sh
-# ~/.bashrc
-[ -f "$HOME/dotfiles/bashrc" ] && . "$HOME/dotfiles/bashrc"
-
-# ~/.gitconfig
-[include]
-    path = ~/dotfiles/gitconfig
-
-# vim, IPython
-ln -s ~/dotfiles/.vimrc ~/.vimrc
-~/dotfiles/setup_ipython.sh
+git clone git@github.com:sveneberth/dotfiles.git ~/dotfiles
+~/dotfiles/setup.sh            # --root: also link the vimrc for sudo vim
 ```
+
+`setup.sh` adds the load lines to `~/.bashrc` and `~/.gitconfig` and creates the symlinks.
+Safe to run again: existing setup is reported as `ok`. A file in the way with different
+content shows its diff and asks to overwrite, back up or skip.
+
+New scripts and changes arrive with a `git pull`. Run `setup.sh` again only when a new
+symlink was added.
 
 ## Scripts (`bin/`)
 
@@ -49,12 +46,9 @@ pdfocr --help
 
 ## Emoji picker (rofimoji)
 ```sh
-# Install
+# Install, then link the config
 yay -S rofi rofimoji
-
-# Symlink rofi config
-mkdir -p ~/.config/rofi
-ln -s ~/dotfiles/rofi-config.rasi ~/.config/rofi/config.rasi
+~/dotfiles/setup.sh
 
 # Add shortcut in XFCE: Settings > Keyboard > Application Shortcuts
 # - Command: rofimoji
