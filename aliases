@@ -2,8 +2,13 @@
 # ALIAS #
 #########
 
+# Enable aliases to be sudo’ed
+alias sudo="sudo "
+
 # general
 alias c="clear"
+alias open="xdg-open"
+alias o="open"
 
 # list dir
 alias ll="ls -alhF"
@@ -21,6 +26,14 @@ alias .5="cd ../../../../.."
 
 #alias -="cd -"
 
+# defaults for built-ins (verbose and interactive, colors)
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias grep="grep -i --color=auto"
+alias mkdir="mkdir -p"
+alias df='df -h'
+
 # browser
 alias ff="/bin/firefox"
 alias chrome="/bin/google-chrome-stable"
@@ -33,6 +46,7 @@ alias gitsub="git submodule init && git submodule update --recursive"
 alias tmpDir='cd $(mktemp -d)'
 
 # edit dotfiles
+alias eA='$EDITOR ~/dotfiles/aliases'
 alias eB='$EDITOR ~/.bashrc'
 alias eP='$EDITOR ~/.profile'
 alias eG='$EDITOR ~/.gitconfig'
