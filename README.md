@@ -13,6 +13,11 @@
 | `.ipython/startup/` | IPython startup imports | symlink `~/.ipython/profile_default/startup`, if IPython is installed |
 | `rofi-config.rasi` | rofi | symlink `~/.config/rofi/config.rasi`, if rofi is installed |
 
+Where does a new helper go?
+- changes the current shell (`cd`, `export`, prompt) → function in `bashrc`
+- command with fixed options → `aliases`
+- everything else → script in `bin/` (also works in Claude, `xargs`, other scripts)
+
 ## Setup
 
 ```sh
@@ -31,6 +36,13 @@ New scripts and changes arrive with a `git pull`. Run `setup.sh` again only when
 symlink was added.
 
 ## Scripts (`bin/`)
+
+### Backup copy (`bak`)
+Copies files or directories to `<name>.bak-<timestamp>`, never overwriting an existing backup.
+
+```sh
+bak config.yaml some-dir/
+```
 
 ### Terminal reset (`fix-term`)
 Repairs a terminal whose colour, underline or charset attribute got stuck.

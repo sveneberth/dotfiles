@@ -59,41 +59,6 @@ function load_env() {
 }
 
 
-# create timestamped backup copies of files or directories (recursively)
-function bak() {
-    if (( $# == 0 )); then
-        echo "Usage: bak <path>..." >&2
-        return 1
-    fi
-    local stamp
-    stamp="$(date +"%Y-%m-%d_%H-%M")"
-    local src dest n rc=0
-    for src in "$@"; do
-        # strip trailing slashes, else `cp -a dir/ dir.bak` copies into an existing target
-        while [[ "$src" == */ && "$src" != "/" ]]; do
-            src="${src%/}"
-        done
-        if [[ ! -e "$src" && ! -L "$src" ]]; then
-            echo "bak: not found: $src" >&2
-            rc=1
-            continue
-        fi
-        dest="$src.bak-$stamp"
-        n=2
-        # never clobber an existing backup, count up instead
-        while [[ -e "$dest" || -L "$dest" ]]; do
-            dest="$src.bak-$stamp.$((n++))"
-        done
-        if cp -a -- "$src" "$dest"; then
-            echo "$src -> $dest"
-        else
-            rc=1
-        fi
-    done
-    return $rc
-}
-
-
 # log-with-tee: run a command and mirror its output (stdout+stderr) into a log file
 # named after the script or command being run:
 #   lwt ./cleanup_task.py --fix          -> ./cleanup_task_2026-09-09-08-30.log
