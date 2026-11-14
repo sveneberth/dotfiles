@@ -7,6 +7,7 @@ alias c="clear"
 
 # list dir
 alias ll="ls -alhF"
+alias lltr="ll -tr"
 alias la="ls -lA"
 alias l="ls -CF"
 
