@@ -37,6 +37,15 @@ ln -s ~/dotfiles/fix-term ~/.local/bin/fix-term
 fix-term --help
 ```
 
+### Scan OCR (`pdfocr`)
+Adds an invisible text layer to a scanned PDF, keeping the original (e.g. 600 dpi) images.
+
+```sh
+sudo pacman -S poppler qpdf tesseract tesseract-data-deu tesseract-data-eng
+ln -s ~/dotfiles/pdfocr ~/.local/bin/pdfocr
+pdfocr --help
+```
+
 ### Load git
 ```sh
 [include]

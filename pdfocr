@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# Add an invisible OCR text layer to a scanned PDF while keeping the original
+# images untouched.
+#
+# OCR runs on a 300 dpi rendering of each page, not on the PDF's own images:
+# tesseract misses large headlines on 600 dpi scans (letters too tall), and
+# gscan2pdf offers no way to downscale for OCR only. The resulting text-only
+# PDF is placed underneath the original pages with qpdf, so a 600 dpi scan
+# stays a 600 dpi scan.
+#
+# Defaults (--psm 11, Sauvola thresholding) were picked on a flyer scan: they
+# were the only combination that caught white-on-red text ("NEU!") as well as
+# the headline and the body text.
+#
+# The input should not already contain a text layer (save from gscan2pdf
+# without OCR), otherwise both layers end up stacked.
+#
+# Usage:
+#   pdfocr scan.pdf                 # writes scan_ocr.pdf
+#   pdfocr scan.pdf -o out.pdf      # writes out.pdf
+#   pdfocr scan.pdf --in-place      # replaces scan.pdf
+#   pdfocr scan.pdf -l eng --psm 3  # other language / page segmentation mode
+#
+# Needs: poppler (pdftoppm, pdftotext), tesseract + tesseract-data-*, qpdf
+
+set -euo pipefail
+
+usage() {
+    sed -n '2,/^$/{s/^# \{0,1\}//;p}' "$0"
+}
+
+in="" out="" in_place=0 force=0 lang="deu+eng" psm=11 dpi=300
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -o|--output) out="$2"; shift 2 ;;
+        --in-place) in_place=1; shift ;;
+        -f|--force) force=1; shift ;;
+        -l|--lang) lang="$2"; shift 2 ;;
+        --psm) psm="$2"; shift 2 ;;
+        --dpi) dpi="$2"; shift 2 ;;
+        -h|--help) usage; exit 0 ;;
+        -*) echo "pdfocr: unknown option $1" >&2; exit 2 ;;
+        *) [[ -z "$in" ]] || { echo "pdfocr: only one input file" >&2; exit 2; }
+           in="$1"; shift ;;
+    esac
+done
+
+[[ -n "$in" ]] || { usage >&2; exit 2; }
+[[ -f "$in" ]] || { echo "pdfocr: $in not found" >&2; exit 1; }
+[[ $in_place -eq 0 || -z "$out" ]] || { echo "pdfocr: --in-place and -o exclude each other" >&2; exit 2; }
+
+for cmd in pdftoppm pdftotext tesseract qpdf; do
+    command -v "$cmd" >/dev/null || { echo "pdfocr: $cmd is missing" >&2; exit 1; }
+done
+
+if [[ $in_place -eq 0 ]]; then
+    out="${out:-${in%.pdf}_ocr.pdf}"
+    if [[ -e "$out" && $force -eq 0 ]]; then
+        echo "pdfocr: $out exists, use -f to overwrite" >&2
+        exit 1
+    fi
+fi
+
+if [[ -n "$(pdftotext "$in" - 2>/dev/null | tr -d '[:space:]')" ]]; then
+    echo "pdfocr: warning: $in already contains text, layers will be stacked" >&2
+fi
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+pdftoppm -r "$dpi" -png "$in" "$tmp/p"
+ls "$tmp"/p*.png > "$tmp/list.txt"
+# tesseract reports leptonica noise ("box outside rectangle") on stderr even on success
+tesseract "$tmp/list.txt" "$tmp/text" --dpi "$dpi" -l "$lang" --psm "$psm" \
+    -c thresholding_method=2 -c textonly_pdf=1 pdf 2>"$tmp/tesseract.log" \
+    || { cat "$tmp/tesseract.log" >&2; exit 1; }
+
+if [[ $in_place -eq 1 ]]; then
+    qpdf "$in" --underlay "$tmp/text.pdf" -- "$tmp/result.pdf"
+    mv "$tmp/result.pdf" "$in"
+    echo "$in"
+else
+    qpdf "$in" --underlay "$tmp/text.pdf" -- "$out"
+    echo "$out"
+fi
