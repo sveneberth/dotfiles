@@ -20,6 +20,9 @@ git clone git@github.com:sveneberth/dotfiles.git ~/dotfiles
 ~/dotfiles/setup.sh            # --root: also link the vimrc for sudo vim
 ```
 
+`--root` only on single-user machines: `/root/.vimrc` applies to everyone who becomes root.
+On shared servers use `sudoedit <file>`, which runs vim as you with your vimrc.
+
 `setup.sh` adds the load lines to `~/.bashrc` and `~/.gitconfig` and creates the symlinks.
 Safe to run again: existing setup is reported as `ok`. A file in the way with different
 content shows its diff and asks to overwrite, back up or skip.

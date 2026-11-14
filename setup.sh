@@ -8,6 +8,10 @@
 # Usage:
 #   ~/dotfiles/setup.sh          # set up for the current user
 #   ~/dotfiles/setup.sh --root   # also link the vimrc for root (sudo vim)
+#
+# --root is for single-user machines only: /root/.vimrc applies to everyone who
+# becomes root, and root would run a file from this user's home. On shared
+# servers use `sudoedit <file>` instead, which runs vim as you with your vimrc.
 
 set -euo pipefail
 
