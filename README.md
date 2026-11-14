@@ -1,17 +1,11 @@
 # dotfiles
 
 
-### Load bash 
+### Load bash
+One line in `~/.bashrc`. `bashrc` pulls in `profile` (`PATH` incl. `bin/`, `EDITOR`) and `aliases` itself.
+
 ```sh
-# load from dotfiles
-if [ -f "$HOME/dotfiles/bashrc" ]; then 
-    #echo "load $HOME/dotfiles/bashrc"
-    . "$HOME/dotfiles/bashrc"
-fi
-if [ -f "$HOME/dotfiles/aliases" ]; then 
-    #echo "load $HOME/dotfiles/aliases"
-    . "$HOME/dotfiles/aliases"
-fi
+[ -f "$HOME/dotfiles/bashrc" ] && . "$HOME/dotfiles/bashrc"
 ```
 
 ### Emoji picker (rofimoji)
@@ -29,20 +23,21 @@ ln -s ~/dotfiles/rofi-config.rasi ~/.config/rofi/config.rasi
 xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/<Primary>period" -n -t string -s "rofimoji"
 ```
 
-### Terminal reset (`fix-term`)
+### Scripts (`bin/`)
+On the `PATH` via `profile`, so new scripts are available after a `git pull`.
+
+#### Terminal reset (`fix-term`)
 Repairs a terminal whose colour, underline or charset attribute got stuck.
 
 ```sh
-ln -s ~/dotfiles/fix-term ~/.local/bin/fix-term
 fix-term --help
 ```
 
-### Scan OCR (`pdfocr`)
+#### Scan OCR (`pdfocr`)
 Adds an invisible text layer to a scanned PDF, keeping the original (e.g. 600 dpi) images.
 
 ```sh
 sudo pacman -S poppler qpdf tesseract tesseract-data-deu tesseract-data-eng
-ln -s ~/dotfiles/pdfocr ~/.local/bin/pdfocr
 pdfocr --help
 ```
 

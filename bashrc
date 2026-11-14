@@ -1,4 +1,6 @@
-export EDITOR=vim
+# Entry point, loaded from ~/.bashrc. Pulls in the environment first and
+# the aliases last, so a new machine needs only the one line in ~/.bashrc.
+. "$HOME/dotfiles/profile"
 
 function ctx_bash() {
     local topic="${1:-}"
@@ -230,3 +232,5 @@ lwt() {
 # The trailing blank makes bash alias-expand the word right after `lwt`, which covers
 # `lwt pr ...`; behind an option the function resolves the alias itself.
 alias lwt='lwt '
+
+. "$HOME/dotfiles/aliases"
