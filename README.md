@@ -67,6 +67,14 @@ gitDeleteLocalBranches
 git submodule foreach --recursive gitDeleteLocalBranches
 ```
 
+### Log with tee (`lwt`)
+Runs a command and mirrors its output into a log file named after the script. Resolves
+aliases like `pr` from `aliases`, so it also works in Claude. Options: header of `bin/lwt`.
+
+```sh
+lwt -c : pr ./cleanup_task.py --fix    # -> cleanup_task_2026-11-18-10-30.log
+```
+
 ### Scan OCR (`pdfocr`)
 Adds an invisible text layer to a scanned PDF, keeping the original (e.g. 600 dpi) images.
 

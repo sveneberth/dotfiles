@@ -5,6 +5,10 @@
 # Enable aliases to be sudo’ed
 alias sudo="sudo "
 
+# The trailing blank makes bash alias-expand the word right after `lwt` (`lwt pr ...`);
+# behind an option `bin/lwt` resolves the alias from this file itself.
+alias lwt='lwt '
+
 # general
 alias c="clear"
 alias open="xdg-open"
