@@ -9,13 +9,6 @@ function gac() {
 }
 
 
-function releaseTag() {
-    tag_name="release-`date +"%Y-%m-%d"`${1}"
-    git tag -am "Release: ${2}" "$tag_name"
-    git push "$(git remote)" "$tag_name"
-}
-
-
 # load a .env file (KEY=value) into the current shell and export all vars
 function load_env() {
     local file="${1:-.env}"

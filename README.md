@@ -82,6 +82,14 @@ Prints a random string, by default 8 characters from `a-zA-Z0-9`.
 randomStr 32 'a-f0-9'
 ```
 
+### Release tag (`releaseTag`)
+Creates the annotated tag `release-<date><suffix>` and pushes it.
+
+```sh
+releaseTag                # release-2026-11-17
+releaseTag -2 "Hotfix"    # release-2026-11-17-2, message "Release: Hotfix"
+```
+
 ## Emoji picker (rofimoji)
 ```sh
 # Install, then link the config

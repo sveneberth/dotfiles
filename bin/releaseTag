@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Create an annotated tag release-<date><suffix> and push it.
+#
+# Usage:
+#   releaseTag                     # release-2026-11-17, message "Release: "
+#   releaseTag [suffix] [message]  # releaseTag -2 "Hotfix" -> release-2026-11-17-2
+
+set -u
+
+tag_name="release-`date +"%Y-%m-%d"`${1-}"
+git tag -am "Release: ${2-}" "$tag_name"
+git push "$(git remote)" "$tag_name"
