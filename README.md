@@ -75,6 +75,13 @@ sudo pacman -S poppler qpdf tesseract tesseract-data-deu tesseract-data-eng
 pdfocr --help
 ```
 
+### Random string (`randomStr`)
+Prints a random string, by default 8 characters from `a-zA-Z0-9`.
+
+```sh
+randomStr 32 'a-f0-9'
+```
+
 ## Emoji picker (rofimoji)
 ```sh
 # Install, then link the config

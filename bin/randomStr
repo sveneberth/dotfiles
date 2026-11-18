@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Print a random string from /dev/urandom, without a trailing newline.
+#
+# Usage:
+#   randomStr [length] [chars]    # defaults: 8 and 'a-zA-Z0-9', chars is a tr(1) set
+#   randomStr 32 'a-f0-9'
+
+set -u
+
+#    cat /dev/urandom | tr -cd ${2:-'a-zA-Z0-9'} | fold -w ${1:-8} | head -n 1
+tr -cd ${2:-'a-zA-Z0-9'} < /dev/urandom | head -c ${1:-8}
