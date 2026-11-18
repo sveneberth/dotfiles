@@ -44,6 +44,14 @@ Copies files or directories to `<name>.bak-<timestamp>`, never overwriting an ex
 bak config.yaml some-dir/
 ```
 
+### History context (`ctx_bash`)
+Opens a nested bash with its own history file and the topic in the prompt. `exit` returns.
+
+```sh
+ctx_bash work    # history in ~/.bash_history_ctx_work
+ctx_bash         # list the contexts
+```
+
 ### Terminal reset (`fix-term`)
 Repairs a terminal whose colour, underline or charset attribute got stuck.
 

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Open a nested bash with its own history file and the topic in the prompt, to
+# keep the history of separate tasks apart. `exit` returns to the previous shell.
+#
+# Usage:
+#   ctx_bash <topic>    # history in ~/.bash_history_ctx_<topic>
+#   ctx_bash            # list the existing contexts
+
+set -u
+
+topic="${1:-}"
+if [[ -z "$topic" ]]; then
+    echo "Usage: ctx_bash <topic>"
+    found=0
+    for f in "$HOME"/.bash_history_ctx_*; do
+        [[ -f "$f" ]] || continue
+        (( found++ == 0 )) && echo "Available contexts:"
+        echo "  ${f##*_ctx_}"
+    done
+    exit 1
+fi
+histfile="$HOME/.bash_history_ctx_$topic"
+echo "Entering bash context: $topic  ($histfile)"
+# exec, so no idle script process stays behind the context shell
+HISTFILE="$histfile" BASH_CTX="$topic" exec bash --rcfile <(printf '%s\n' \
+    "source $HOME/.bashrc" \
+    'PS1="\[\033[01;33m\](ctx:$BASH_CTX) \[\033[00m\]$PS1"' \
+)
