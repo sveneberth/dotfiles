@@ -4,9 +4,6 @@
 
 # git
 #alias gitsub="git submodule init && git submodule update --recursive"
-function gac() {
-    git commit -am "$1"
-}
 
 
 # load a .env file (KEY=value) into the current shell and export all vars

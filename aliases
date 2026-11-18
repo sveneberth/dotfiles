@@ -41,6 +41,7 @@ alias browser=chrome
 
 # git
 alias gitsub="git submodule init && git submodule update --recursive"
+alias gac="git commit -am"
 
 # tmp helper
 alias tmpDir='cd $(mktemp -d)'
