@@ -7,9 +7,6 @@
 function gac() {
     git commit -am "$1"
 }
-function gitDeleteLocalBranches() {
-	git fetch -p && for branch in $(git for-each-ref --format '%(refname) %(upstream:track)' refs/heads | awk '$2 == "[gone]" {sub("refs/heads/", "", $1); print $1}'); do git branch -D $branch; done
-}
 
 
 function randomStr() {

@@ -59,6 +59,14 @@ Repairs a terminal whose colour, underline or charset attribute got stuck.
 fix-term --help
 ```
 
+### Delete gone branches (`gitDeleteLocalBranches`)
+Fetches with `--prune` and deletes local branches whose upstream is gone, unmerged ones too.
+
+```sh
+gitDeleteLocalBranches
+git submodule foreach --recursive gitDeleteLocalBranches
+```
+
 ### Scan OCR (`pdfocr`)
 Adds an invisible text layer to a scanned PDF, keeping the original (e.g. 600 dpi) images.
 
